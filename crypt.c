@@ -71,5 +71,5 @@ int crypt(char * input, char * key, int pos, char * output) {
    fclose(inputf);
    fclose(keyf);
    fclose(outputf);
-   return 1;
+   return pos+size_input;
 }
