@@ -8,13 +8,13 @@
 
 int main(int argc, char *argv[]) {
    
-   // Testing if there are parameters
+   /* Testing if there are parameters */
    if (argc < 2) {
       fprintf(stderr, "\nStandart commands:\n\tgenerate -- generate a new keyfile\n\tcrypt\t -- en/decrypt a file\n\n");
       return 0;
    }
    
-   // Case: generate
+   /* Case: generate */
    if (strcmp("generate", argv[1])  == 0) {
       if (argc == 4) {
 
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
       }
    }
 
-   // Case: crypt
+   /* Case: crypt */
    if (strcmp("crypt", argv[1])  == 0) {
       if (argc == 6) {
          
