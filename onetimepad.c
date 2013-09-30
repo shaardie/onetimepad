@@ -38,28 +38,36 @@ int main(int argc, char *argv[]) {
       }
    }
 
-   /* Case: crypt */
-   if (strcmp("crypt", argv[1])  == 0) {
-      if (argc == 6) {
-         
-         int pos = atoi(argv[4]);
-
-         if (pos >= 0) {
-            return crypt(argv[2], argv[3], pos, argv[5]);
-         }
-
-         else {
-            fprintf(stderr, "Non-positiv size or pos\n");         
-         }
+   /* Case: encrypt */
+   if (strcmp("encrypt", argv[1])  == 0) {
+      if (argc == 5) {
+         return encrypt(argv[2], argv[3], argv[4]);
       }
 
       else {
-         fprintf(stderr, "\nFormat:\t crypt [inputfile] [keyfile] "
+         fprintf(stderr, "\nFormat:\t encrypt [inputfile] [keyfile] "
 					"[position in keyfile] [outputfile]\n\n");
          return 0;
       }
    }
 
+
+   /* Case: decrypt */
+   if (strcmp("decrypt", argv[1])  == 0) {
+      if (argc == 5) {
+         
+         return decrypt(argv[2], argv[3], argv[4]);
+      }
+
+      else {
+         fprintf(stderr, "\nFormat:\t decrypt [inputfile] [keyfile] "
+					"[position in keyfile] [outputfile]\n\n");
+         return 0;
+      }
+   }
+
+   fprintf(stderr, "\nUnknown Yheaklögfd\n");
+   
 
    return 0;
 }

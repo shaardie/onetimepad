@@ -5,6 +5,8 @@
  *  * _CRYPT_H_INCLUDED definiert und somit ist die Bedingung für #ifndef nicht
  *   * erfüllt. */
 
-int crypt(char * input, char * key, int pos, char * output);
+int encrypt(char * input, char * key, char * output);
+int decrypt(char * input, char * key, char * output);
+
 
 #endif
