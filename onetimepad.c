@@ -10,9 +10,10 @@ int main(int argc, char *argv[]) {
    
    /* Testing if there are parameters */
    if (argc < 2) {
-      fprintf(stderr, "\nStandart commands:\n"
+      fprintf(stderr, "\nStandard commands:\n"
 				"\tgenerate -- generate a new keyfile\n"
-				"\tcrypt\t -- en/decrypt a file\n\n");
+				"\tencrypt\t -- encrypt a file\n"
+            "\tdecrypt\t -- decrypt a file\n\n");
       return 0;
    }
    
@@ -27,7 +28,7 @@ int main(int argc, char *argv[]) {
          }
          
          else {
-            fprintf(stderr, "Non-positiv size.\n");
+            fprintf(stderr, "\nNon-positiv size\n\n");
             return 0;
          }
       }
@@ -45,8 +46,8 @@ int main(int argc, char *argv[]) {
       }
 
       else {
-         fprintf(stderr, "\nFormat:\t encrypt [inputfile] [keyfile] "
-					"[position in keyfile] [outputfile]\n\n");
+         fprintf(stderr, "\nFormat:\t encrypt [infile] [keyfile] "
+					"[outfile]\n\n");
          return 0;
       }
    }
@@ -60,14 +61,15 @@ int main(int argc, char *argv[]) {
       }
 
       else {
-         fprintf(stderr, "\nFormat:\t decrypt [inputfile] [keyfile] "
-					"[position in keyfile] [outputfile]\n\n");
+         fprintf(stderr, "\nFormat:\t decrypt [infile] [keyfile] "
+					"[outfile]\n\n");
          return 0;
       }
    }
-
-   fprintf(stderr, "\nUnknown Yheaklögfd\n");
    
-
+   fprintf(stderr, "\nStandard commands:\n"
+			"\tgenerate -- generate a new keyfile\n"
+			"\tencrypt\t -- encrypt a file\n"
+         "\tdecrypt\t -- decrypt a file\n\n");
    return 0;
 }
