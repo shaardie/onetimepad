@@ -1,19 +1,24 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include "openssl/rand.h"
 
-int generate ( int size, char * path) {
+int generate ( size_t size, char * path) {
    
    size *= 1024;
    FILE * f = fopen(path,"w");
    
    if (!f) {
-      fprintf(stderr, "Could not open keyfile");
+      fprintf(stderr, "Could not open keyfile %s", path);
       return 0;
    }
 
-   unsigned char * buf = malloc(size*sizeof(unsigned char));
+   uint8_t * buf = malloc(size * sizeof(uint8_t));
+	if (!buf) {
+		fprintf(stderr, "Could not allocate memory\n");
+		return 0;
+	}
    if (!RAND_bytes(buf,size)) {
       fprintf(stderr, "Could not create random character");
       return 0;

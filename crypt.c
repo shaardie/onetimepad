@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int crypt(char * input, char * key, int pos, char * output) {
+int crypt(char * input, char * key, size_t pos, char * output) {
    
    FILE * inputf = fopen (input,"r");
 
@@ -11,7 +11,7 @@ int crypt(char * input, char * key, int pos, char * output) {
    }
 
    fseek(inputf,0,SEEK_END);
-   int size_input = ftell(inputf);
+   size_t size_input = ftell(inputf);
    fseek(inputf,0,0);
 
    FILE * outputf = fopen (output,"w");
@@ -29,7 +29,7 @@ int crypt(char * input, char * key, int pos, char * output) {
    }
 
    fseek(keyf,0,SEEK_END);
-   int size_key = ftell(keyf);
+   size_t size_key = ftell(keyf);
 
    if (pos + size_input <= size_key) {
       

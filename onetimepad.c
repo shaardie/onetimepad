@@ -10,7 +10,9 @@ int main(int argc, char *argv[]) {
    
    // Testing if there are parameters
    if (argc < 2) {
-      fprintf(stderr, "\nStandart commands:\n\tgenerate -- generate a new keyfile\n\tcrypt\t -- en/decrypt a file\n\n");
+      fprintf(stderr, "\nStandart commands:\n"
+				"\tgenerate -- generate a new keyfile\n"
+				"\tcrypt\t -- en/decrypt a file\n\n");
       return 0;
    }
    
@@ -31,7 +33,7 @@ int main(int argc, char *argv[]) {
       }
       
       else {
-         fprintf(stderr, "\nFormat:\t generate [size] [keyfile]\n\n");
+         fprintf(stderr, "\nFormat:\t generate [size (kb)] [keyfile]\n\n");
          return 0;
       }
    }
@@ -52,7 +54,8 @@ int main(int argc, char *argv[]) {
       }
 
       else {
-         fprintf(stderr, "\nFormat:\t crypt [inputfile] [keyfile] [position in keyfile] [outputfile]\n\n");
+         fprintf(stderr, "\nFormat:\t crypt [inputfile] [keyfile] "
+					"[position in keyfile] [outputfile]\n\n");
          return 0;
       }
    }
