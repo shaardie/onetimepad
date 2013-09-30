@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "header.h"
 
 int crypt(char * input, char * key, size_t pos, char * output) {
    
