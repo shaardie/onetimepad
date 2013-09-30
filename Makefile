@@ -1,5 +1,5 @@
 all: onetimepad.c crypt.o generate.o
-	gcc -Wall -lcrypto onetimepad.c crypt.o generate.o -o onetimepad
+	gcc -Wall onetimepad.c crypt.o generate.o -o onetimepad -lcrypto
 
 install: all 
 	cp onetimepad.1.gz /usr/share/man/man1/
@@ -10,9 +10,6 @@ crypt.o: crypt.c crypt.h
 
 generate.o: generate.c generate.h
 	gcc -Wall generate.c -c -o generate.o
-
-test: all
-	valgrind --leak-check=full ./onetimepad
 
 clean:
 	rm -f onetimepad crypt.o generate.o 
