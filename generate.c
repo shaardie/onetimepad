@@ -13,17 +13,18 @@ int generate ( size_t size, char * path) {
 	h.pos       = 0;
 	h.size      = size;
 	if (!RAND_bytes((uint8_t*) &h.id, sizeof(uint64_t))) {
-      fprintf(stderr, "Could not create random character");
+      fprintf(stderr, "\nCould not create good random character\n");
       return 1;
    }
 
    uint8_t * buf = malloc(size * sizeof(uint8_t));
 	if (!buf) {
-		fprintf(stderr, "Could not allocate memory\n");
+		fprintf(stderr, "\nCould not allocate memory\n");
 		return 1;
 	}
    if (!RAND_bytes(buf,size)) {
-      fprintf(stderr, "Could not create random character");
+      fprintf(stderr, "\nCould not create random character\n");
+      free(buf);
       return 1;
    }
 
@@ -31,15 +32,20 @@ int generate ( size_t size, char * path) {
    
    if (!f) {
       fprintf(stderr, "Could not open keyfile %s", path);
+      free(buf);
       return 1;
    }
 
 	if (fwrite(&h, 1, sizeof(header_t), f) != sizeof(header_t)) {
       fprintf(stderr, "Could not write to keyfile %s", path);
+      free(buf);
+      close(f);
       return 1;
    }
    if (fwrite(buf, 1, size, f) != size ) {
       fprintf(stderr, "Could not write to keyfile");
+      free(buf);
+      close(f);
       return 1;       
    }
    fclose(f);
@@ -53,15 +59,24 @@ int generate ( size_t size, char * path) {
    
    if (!f) {
       fprintf(stderr, "Could not open keyfile %s", path);
+      free(buf);
+      free(pubpath);
+      close(f);
       return 1;
    }
 
 	if (fwrite(&h, 1, sizeof(header_t), f) != sizeof(header_t)) {
       fprintf(stderr, "Could not write to keyfile %s", pubpath);
+      free(buf);
+      free(pubpath);
+      close(f);
       return 1;
    }
    if (fwrite(buf, 1, size, f) != size ) {
       fprintf(stderr, "Could not write to keyfile");
+      free(buf);
+      free(pubpath);
+      close(f);
       return 1;       
    }
    fclose(f);
