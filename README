@@ -1,1 +1,9 @@
 Onetimepad is a cryptography tool
+
+INSTALATION
+-----------
+
+To install Onetimepad, you will need: 
+- make 
+- An ANSI C compiler
+- Openssl development library
