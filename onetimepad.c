@@ -3,18 +3,21 @@
 #include <string.h>
 #include "crypt.h"
 #include "generate.h"
-#include "openssl/rand.h"
+#include "aes.h"
 
+/* Main file.  Read in arguments an transfer them
+ * to encrypt, decrypt and generate */
 
 int main(int argc, char *argv[]) {
    
-   /* Testing if there are parameters */
+   /* Looking for parameters and show otherwise 
+    * standard commands */
    if (argc < 2) {
       fprintf(stderr, "\nStandard commands:\n"
 				"\tgenerate -- generate a new keyfile\n"
 				"\tencrypt\t -- encrypt a file\n"
             "\tdecrypt\t -- decrypt a file\n\n");
-      return 0;
+      return 1;
    }
    
    /* Case: generate */
@@ -34,7 +37,8 @@ int main(int argc, char *argv[]) {
       }
       
       else {
-         fprintf(stderr, "\nFormat:\t generate [size (kb)] [keyfile]\n\n");
+         fprintf(stderr, "\nFormat:\t generate [size (kb)]"
+         " [keyfile]\n\n");
          return 0;
       }
    }
@@ -66,7 +70,35 @@ int main(int argc, char *argv[]) {
          return 0;
       }
    }
+  
+   /* Case aes_encrypt */
+   if (strcmp("aes_encrypt", argv[1])  == 0) {
+      if (argc == 3) {
+         
+         return aes_encrypt(argv[2]);
+      }
+
+      else {
+         fprintf(stderr, "\n\nERROR\n\n");
+         return 0;
+      }
+   }
+
+   /* Case aes_decrypt */
+   if (strcmp("aes_decrypt", argv[1])  == 0) {
+      if (argc == 3) {
+         
+         return aes_decrypt(argv[2]);
+      }
+
+      else {
+         fprintf(stderr, "\n\nERROR\n\n");
+         return 0;
+      }
+   }
+
    
+   /* Case: default */
    fprintf(stderr, "\nStandard commands:\n"
 			"\tgenerate -- generate a new keyfile\n"
 			"\tencrypt\t -- encrypt a file\n"

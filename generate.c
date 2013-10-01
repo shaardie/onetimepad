@@ -4,6 +4,10 @@
 #include <openssl/rand.h>
 #include "header.h"
 
+/* Generate a keyfile [path] and a private keyfile [path].private
+ * with the same 1042*[size] random bytes using openssl/rand.h, but
+ * different headers. */
+
 int generate ( size_t size, char * path) {
    
    size *= 1024;
@@ -39,13 +43,13 @@ int generate ( size_t size, char * path) {
 	if (fwrite(&h, 1, sizeof(header_t), f) != sizeof(header_t)) {
       fprintf(stderr, "Could not write to keyfile %s", path);
       free(buf);
-      close(f);
+      fclose(f);
       return 1;
    }
    if (fwrite(buf, 1, size, f) != size ) {
       fprintf(stderr, "Could not write to keyfile");
       free(buf);
-      close(f);
+      fclose(f);
       return 1;       
    }
    fclose(f);
@@ -61,7 +65,7 @@ int generate ( size_t size, char * path) {
       fprintf(stderr, "Could not open keyfile %s", path);
       free(buf);
       free(pubpath);
-      close(f);
+      fclose(f);
       return 1;
    }
 
@@ -69,18 +73,19 @@ int generate ( size_t size, char * path) {
       fprintf(stderr, "Could not write to keyfile %s", pubpath);
       free(buf);
       free(pubpath);
-      close(f);
+      fclose(f);
       return 1;
    }
    if (fwrite(buf, 1, size, f) != size ) {
       fprintf(stderr, "Could not write to keyfile");
       free(buf);
       free(pubpath);
-      close(f);
+      fclose(f);
       return 1;       
    }
    fclose(f);
    free(pubpath);
    free(buf);
+
    return 0;
 }

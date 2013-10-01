@@ -1,18 +1,21 @@
-all: onetimepad.c crypt.o generate.o
-	gcc -Wall onetimepad.c crypt.o generate.o -o onetimepad -lcrypto
+all: onetimepad.c crypt.o generate.o aes.o
+	gcc -Wall onetimepad.c crypt.o generate.o aes.o -o onetimepad -lcrypto
 
 install: all 
 	cp onetimepad.1.gz /usr/share/man/man1/
 	cp onetimepad /usr/bin/
 
-crypt.o: crypt.c crypt.h
+crypt.o: crypt.c crypt.h 
 	gcc -Wall crypt.c -c -o crypt.o
 
 generate.o: generate.c generate.h
 	gcc -Wall generate.c -c -o generate.o
 
+aes.o: aes.c aes.h
+	gcc -Wall aes.c -c -o aes.o
+
 clean:
-	rm -f onetimepad crypt.o generate.o 
+	rm -f onetimepad crypt.o generate.o aes.o
 
 uninstall:
 	rm /usr/share/man/man1/onetimepad.1.gz /usr/bin/onetimepad

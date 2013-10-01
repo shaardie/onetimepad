@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "header.h"
+#include "aes.h"
 
 int encrypt(char * input, char * key, char * output) {
    
