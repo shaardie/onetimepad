@@ -2,7 +2,7 @@ all: onetimepad.c crypt.o generate.o aes.o
 	gcc -Wall onetimepad.c crypt.o generate.o aes.o -o onetimepad -lcrypto
 
 install: all 
-	cp onetimepad.1.gz /usr/share/man/man1/
+	cp onetimepad.1 /usr/share/man/man1/
 	cp onetimepad /usr/bin/
 
 crypt.o: crypt.c crypt.h 
@@ -18,7 +18,8 @@ clean:
 	rm -f onetimepad crypt.o generate.o aes.o
 
 uninstall:
-	rm /usr/share/man/man1/onetimepad.1.gz /usr/bin/onetimepad
+	rm -f /usr/share/man/man1/onetimepad.1 /usr/bin/onetimepad
+	rm -f /usr/bin/onetimepad
 
 test: all
 	dd if=/dev/urandom of=inputfile count=10 bs=1M
