@@ -1,0 +1,15 @@
+.TH "Onetimepad" "1" "27.09.2013" "Version 0.1" "Onetimepad"
+.SH "NAME"
+onetimepad \- Onetimepad command line tool
+.SH "SYNOPSIS"
+onetimepad \fIcommand\fR [ \fIcommand_args\fR ]
+.SH "DESCRIPTION"
+Onetimepad is a cryptography toolkit.
+
+The onetimepad program is a command line tool for generate keyfiles with random characters using the openssl libary and encrypt and decrypt files using a keyfile and XOR operations. 
+.SH "STANDART COMMANDS"
+.SS "\fBgenerate\fR" [ \fIsize\fR ] [ \fIkeyfile\fR ]
+generate a keyfile of random characters with the size \fIsize\fR in kilobyte and the name \fIkeyfile\fR.
+.SS "\fBcrypt\fR" [ \fIinputfile\fR ] [ \fIkeyfile\fR ] [ \fIposition\fR ] [ \fIoutputfile\fR ]
+encrypt or decrypt the inputfile with the name \fIinputfile\fR using the characters in the keyfile \fIkeyfile\fR starting at the position \fIposition\fR and putting the result in the outputfile with the name \fIoutputfile\fR.
+
