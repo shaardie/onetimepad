@@ -21,6 +21,12 @@ int generate ( size_t size, char * path) {
       return 1;
    }
 
+	/* Initialize PRNG */
+	if (RAND_load_file("/dev/random", 32) != 32) {
+		fprintf(stderr, "Could not initialize PRNG from /dev/random\n");
+		return 1;
+	}
+
    uint8_t * buf = malloc(size * sizeof(uint8_t));
 	if (!buf) {
 		fprintf(stderr, "\nCould not allocate memory\n");
