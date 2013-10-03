@@ -17,7 +17,8 @@ void usage(const char* prgm) {
 			"\tencrypt  -- encrypt a file\n"
          "\tdecrypt  -- decrypt a file\n\n"
 			"-- Options ----\n"
-			"\t-r       -- Toggle reseed of OpenSSL PRNG (default: enabled)\n", prgm);
+			"\t-r       -- Toggle reseed of OpenSSL PRNG (default: enabled)\n"
+			,prgm);
 }
 
 int main(int argc, char *argv[]) {
@@ -46,7 +47,7 @@ int main(int argc, char *argv[]) {
    /* Case: generate */
    if (!strcmp("generate", cmd)) {
       if (argc - optind == 3) {
-			return generate( atol(argv[optind+1]), argv[optind+2]);
+			return generate( &config, atol(argv[optind+1]), argv[optind+2]);
       }
 		printf("Command options: generate [size (kb)] [keyfile]\n");
 		return 0;

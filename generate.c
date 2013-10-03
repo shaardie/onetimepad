@@ -2,13 +2,13 @@
 #include <stdint.h>
 #include <string.h>
 #include <openssl/rand.h>
-#include "header.h"
+#include "generate.h"
 
 /* Generate a keyfile [path] and a private keyfile [path].private
  * with the same 1042*[size] random bytes using openssl/rand.h, but
  * different headers. */
 
-int generate ( size_t size, char * path) {
+int generate ( config_t* config, size_t size, char * path) {
    
    size *= 1024;
 
@@ -22,9 +22,11 @@ int generate ( size_t size, char * path) {
    }
 
 	/* Initialize PRNG */
-	if (RAND_load_file("/dev/random", 32) != 32) {
-		fprintf(stderr, "Could not initialize PRNG from /dev/random\n");
-		return 1;
+	if (config->reseed) {
+		if (RAND_load_file("/dev/random", 32) != 32) {
+			fprintf(stderr, "Could not initialize PRNG from /dev/random\n");
+			return 1;
+		}
 	}
 
    uint8_t * buf = malloc(size * sizeof(uint8_t));
