@@ -16,6 +16,7 @@ typedef struct {
 
 typedef struct {
 	int reseed;
+	int keep_key;
 } config_t;
 
 #endif
