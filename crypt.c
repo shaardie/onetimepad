@@ -85,18 +85,18 @@ int encrypt(config_t* config, char * input, char * key, char * output) {
    keyheader.pos += size_input;
    fseek(keyf,0,0);
 
-	if (fwrite(&keyheader, 1, sizeof(header_t), keyf) != sizeof(header_t)) {
+   if (fwrite(&keyheader, 1, sizeof(header_t), keyf) != sizeof(header_t)) {
       fprintf(stderr, "Could not write to keyfile %s\n", key);
       return 1;
    }
 
-	fseek(keyf,keyheader.pos - size_input + sizeof(header_t),0);
-	uint8_t * buf = calloc( sizeof(uint8_t), size_input );
-	if (fwrite(buf, 1, size_input, keyf) != size_input ) {
-		fprintf(stderr, "Could not write to keyfile %s\n", key);
-		return 1;       
-	}
-	free(buf);
+   fseek(keyf,keyheader.pos - size_input + sizeof(header_t),0);
+   uint8_t * buf = calloc( sizeof(uint8_t), size_input );
+   if (fwrite(buf, 1, size_input, keyf) != size_input ) {
+      fprintf(stderr, "Could not write to keyfile %s\n", key);
+      return 1;       
+   }
+   free(buf);
    fclose(keyf);
 
    return 0;
@@ -176,14 +176,14 @@ int decrypt(config_t* config, char * input, char * key, char * output) {
 
    /* Update keyfile */
    fseek(keyf,inputheader.pos + sizeof(header_t),SEEK_SET);
-	if (!config->keep_key) {
-		uint8_t * buf = calloc( sizeof(uint8_t), inputheader.size );
-		if (fwrite(buf, 1, inputheader.size, keyf) != inputheader.size ) {
-			fprintf(stderr, "Could not write to keyfile %s\n", key);
-			return 1;       
-		}
-		free(buf);
-	}
+   if (!config->keep_key) {
+      uint8_t * buf = calloc( sizeof(uint8_t), inputheader.size );
+      if (fwrite(buf, 1, inputheader.size, keyf) != inputheader.size ) {
+         fprintf(stderr, "Could not write to keyfile %s\n", key);
+         return 1;       
+      }
+      free(buf);
+   }
    fclose(keyf);
 
    return 0;

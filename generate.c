@@ -12,28 +12,28 @@ int generate ( config_t* config, size_t size, char * path) {
    
    size *= 1024;
 
-	header_t h;
-	h.status = STATUS_ENC_KEY;
-	h.pos       = 0;
-	h.size      = size;
-	if (!RAND_bytes((uint8_t*) &h.id, sizeof(uint64_t))) {
+   header_t h;
+   h.status = STATUS_ENC_KEY;
+   h.pos       = 0;
+   h.size      = size;
+   if (!RAND_bytes((uint8_t*) &h.id, sizeof(uint64_t))) {
       fprintf(stderr, "\nCould not create good random character\n");
       return 1;
    }
 
-	/* Initialize PRNG */
-	if (config->reseed) {
-		if (RAND_load_file("/dev/random", 32) != 32) {
-			fprintf(stderr, "Could not initialize PRNG from /dev/random\n");
-			return 1;
-		}
-	}
+   /* Initialize PRNG */
+   if (config->reseed) {
+      if (RAND_load_file("/dev/random", 32) != 32) {
+         fprintf(stderr, "Could not initialize PRNG from /dev/random\n");
+         return 1;
+      }
+   }
 
    uint8_t * buf = malloc(size * sizeof(uint8_t));
-	if (!buf) {
-		fprintf(stderr, "\nCould not allocate memory\n");
-		return 1;
-	}
+   if (!buf) {
+      fprintf(stderr, "\nCould not allocate memory\n");
+      return 1;
+   }
    if (!RAND_bytes(buf,size)) {
       fprintf(stderr, "\nCould not create random character\n");
       free(buf);
@@ -48,7 +48,7 @@ int generate ( config_t* config, size_t size, char * path) {
       return 1;
    }
 
-	if (fwrite(&h, 1, sizeof(header_t), f) != sizeof(header_t)) {
+   if (fwrite(&h, 1, sizeof(header_t), f) != sizeof(header_t)) {
       fprintf(stderr, "Could not write to keyfile %s", path);
       free(buf);
       fclose(f);
@@ -62,7 +62,7 @@ int generate ( config_t* config, size_t size, char * path) {
    }
    fclose(f);
 
-	h.status = STATUS_DEC_KEY;
+   h.status = STATUS_DEC_KEY;
 
    char* pubpath = malloc(strlen(path) + 8 * sizeof(char));
    sprintf(pubpath, "%s.public", path);
@@ -77,7 +77,7 @@ int generate ( config_t* config, size_t size, char * path) {
       return 1;
    }
 
-	if (fwrite(&h, 1, sizeof(header_t), f) != sizeof(header_t)) {
+   if (fwrite(&h, 1, sizeof(header_t), f) != sizeof(header_t)) {
       fprintf(stderr, "Could not write to keyfile %s", pubpath);
       free(buf);
       free(pubpath);
