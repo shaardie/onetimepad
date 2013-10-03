@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include <openssl/rand.h>
 #include "header.h"
+
+#define GCRYPT_NO_DEPRECATED
+#include <gcrypt.h>
 
 int generate ( size_t size, char * path) {
    
@@ -12,21 +14,13 @@ int generate ( size_t size, char * path) {
 	h.status = STATUS_ENC_KEY;
 	h.pos       = 0;
 	h.size      = size;
-	if (!RAND_bytes((uint8_t*) &h.id, sizeof(uint64_t))) {
-      fprintf(stderr, "\nCould not create good random character\n");
-      return 1;
-   }
+	gcry_randomize((uint8_t*) &h.id, sizeof(uint64_t), GCRY_VERY_STRONG_RANDOM);
 
-   uint8_t * buf = malloc(size * sizeof(uint8_t));
+   uint8_t * buf = gcry_random_bytes_secure(size, GCRY_VERY_STRONG_RANDOM);
 	if (!buf) {
-		fprintf(stderr, "\nCould not allocate memory\n");
+		fprintf(stderr, "\nError generating random bytes\n");
 		return 1;
 	}
-   if (!RAND_bytes(buf,size)) {
-      fprintf(stderr, "\nCould not create random character\n");
-      free(buf);
-      return 1;
-   }
 
    FILE * f = fopen(path,"w");
    
