@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
 
    /* Case: encrypt */
    if (!strcmp("encrypt", cmd)) {
-      if (argc - optind == 3) {
+      if (argc - optind == 4) {
          return encrypt(argv[optind+1], argv[optind+2], argv[optind+3]);
       }
 		printf("Command options: encrypt [infile] [keyfile] [outfile]\n");
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 
    /* Case: decrypt */
    if (!strcmp("decrypt", cmd)) {
-      if (argc - optind == 3) {
+      if (argc - optind == 4) {
          return decrypt(argv[optind+1], argv[optind+2], argv[optind+3]);
       }
 		printf("Command options: decrypt [infile] [keyfile] [outfile]\n");
