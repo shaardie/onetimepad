@@ -14,4 +14,9 @@ typedef struct {
 	uint64_t size;
 } header_t;
 
+typedef struct {
+	int reseed;
+	int keep_key;
+} config_t;
+
 #endif
