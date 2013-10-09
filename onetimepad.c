@@ -19,6 +19,8 @@ void usage(const char* prgm) {
          "-- Options ----\n"
          "\t-r       -- Toggle reseed of OpenSSL PRNG (default: reseed)\n"
          "\t-k       -- Toggle if the key part used for decryption shall be\n"
+         "\t-l lib   -- Library to use for encryption and random number generation\n"
+         "\t-s       -- Use very strong pseudo random number generator\n"
          "\t            kept to enable a second decryption. (default: overwrite)\n\n"
          ,prgm);
 }
@@ -27,18 +29,27 @@ int main(int argc, char *argv[]) {
    
    /* Default values:
     * - Reseed
-    * - Do not keep keys */
-   config_t config = { 1, 0 };
+    * - Do not keep keys 
+    * - use openssl 
+    * - use gcrypt random quality strong */
+   config_t config = { 1, 0, USE_OPENSSL, GCRY_STRONG_RANDOM };
 
    /* Read in options for reseed and keeping key */
    int c;
-   while ((c = getopt (argc, argv, "rk")) != -1) {
+   while ((c = getopt (argc, argv, "rkl:s")) != -1) {
       switch (c) {
          case 'r': 
             config.reseed = !config.reseed;
             break;
          case 'k': 
             config.keep_key = !config.keep_key;
+            break;
+         case 'l':
+            config.cryptlib = strcmp(optarg, "gcrypt")
+               ? USE_OPENSSL : USE_LIBGCRYPT;
+            break;
+         case 's':
+            config.random_quality = GCRY_VERY_STRONG_RANDOM;
             break;
       }
    }
