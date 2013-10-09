@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "crypt.h"
-#include "aes.h"
 
 int encrypt(config_t* config, char * input, char * key, char * output) {
    
