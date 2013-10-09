@@ -3,6 +3,10 @@
 #include <string.h>
 #include <openssl/rand.h>
 #include "generate.h"
+#include "header.h"
+
+#define GCRYPT_NO_DEPRECATED
+#include <gcrypt.h>
 
 /* Generate a keyfile [path] and a private keyfile [path].private
  * with the same 1042*[size] random bytes using openssl/rand.h, but
@@ -16,28 +20,48 @@ int generate ( config_t* config, size_t size, char * path) {
    h.status = STATUS_ENC_KEY;
    h.pos       = 0;
    h.size      = size;
-   if (!RAND_bytes((uint8_t*) &h.id, sizeof(uint64_t))) {
-      fprintf(stderr, "\nCould not create good random character\n");
-      return 1;
-   }
+      uint8_t * buf;
 
-   /* Initialize PRNG */
-   if (config->reseed) {
-      if (RAND_load_file("/dev/random", 32) != 32) {
-         fprintf(stderr, "Could not initialize PRNG from /dev/random\n");
+   if (config->cryptlib == USE_OPENSSL) {
+      if (!RAND_bytes((uint8_t*) &h.id, sizeof(uint64_t))) {
+         fprintf(stderr, "\nCould not create good random character\n");
          return 1;
       }
-   }
 
-   uint8_t * buf = malloc(size * sizeof(uint8_t));
-   if (!buf) {
-      fprintf(stderr, "\nCould not allocate memory\n");
-      return 1;
-   }
-   if (!RAND_bytes(buf,size)) {
-      fprintf(stderr, "\nCould not create random character\n");
-      free(buf);
-      return 1;
+      /* Initialize PRNG */
+      if (config->reseed) {
+         if (RAND_load_file("/dev/random", 32) != 32) {
+            fprintf(stderr, "Could not initialize PRNG from /dev/random\n");
+            return 1;
+         }
+      }
+
+      buf = malloc(size * sizeof(uint8_t));
+      if (!buf) {
+         fprintf(stderr, "\nCould not allocate memory\n");
+         return 1;
+      }
+      if (!RAND_bytes(buf,size)) {
+         fprintf(stderr, "\nCould not create random character\n");
+         free(buf);
+         return 1;
+      }
+
+   } else if (config->cryptlib == USE_LIBGCRYPT) {
+
+      gcry_randomize((uint8_t*) &h.id, sizeof(uint64_t), GCRY_VERY_STRONG_RANDOM);
+
+      /* Generate random numbers. We could also use gcry_random_bytes_secure which
+       * uses protected memory for the key storage. Unfortunalely we only have
+       * very limited secure memory and in the end we store the data on the hard
+       * disk anyway.
+       * We could also use GCRY_VERY_STRONG_RANDOM to increase the security. That
+       * will, however, make the PRNG quite slow.*/
+      buf = gcry_random_bytes(size, GCRY_STRONG_RANDOM);
+      if (!buf) {
+         fprintf(stderr, "\nError generating random bytes\n");
+         return 1;
+      }
    }
 
    FILE * f = fopen(path,"w");
