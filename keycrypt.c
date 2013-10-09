@@ -52,7 +52,6 @@ int password (char * pw) {
 }
 
 int aes_encrypt(char * file) {
-   char pw [64];
    return 0;
 }
 
