@@ -4,14 +4,14 @@
 #include "crypt.h"
 #include "header.h"
 #include "generate.h"
-#include "aes.h"
+#include "keycrypt.h"
 #include <getopt.h>
 
 /* Main file.  Read in arguments an transfer them
  * to encrypt, decrypt and generate */
 
 void usage(const char* prgm) {
-   printf( "Usage: %s [options] command [command options]\n"
+   printf( "\nUsage: %s [options] command [command options]\n\n"
          "-- Commands: ----\n"
          "\tgenerate -- generate a new keyfile\n"
          "\tencrypt  -- encrypt a file\n"
@@ -19,7 +19,7 @@ void usage(const char* prgm) {
          "-- Options ----\n"
          "\t-r       -- Toggle reseed of OpenSSL PRNG (default: reseed)\n"
          "\t-k       -- Toggle if the key part used for decryption shall be\n"
-         "\t            kept to enable a second decryption. (default: overwrite)\n"
+         "\t            kept to enable a second decryption. (default: overwrite)\n\n"
          ,prgm);
 }
 
@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
     * - Do not keep keys */
    config_t config = { 1, 0 };
 
+   /* Read in options for reseed and keeping key */
    int c;
    while ((c = getopt (argc, argv, "rk")) != -1) {
       switch (c) {
@@ -78,25 +79,6 @@ int main(int argc, char *argv[]) {
       return 0;
    }
   
-   /* Case aes_encrypt */
-   if (!strcmp("aes_encrypt", cmd)) {
-      if (argc - optind == 1) {
-         return aes_encrypt(argv[optind+1]);
-      }
-      fprintf(stderr, "\n\nERROR\n\n");
-      return 0;
-   }
-
-   /* Case aes_decrypt */
-   if (!strcmp("aes_decrypt", cmd)) {
-      if (argc - optind == 1) {
-         return aes_decrypt(argv[optind+1]);
-      }
-      fprintf(stderr, "\n\nERROR\n\n");
-      return 0;
-   }
-
-   
    /* Case: default */
    usage(*argv);
    return 0;
