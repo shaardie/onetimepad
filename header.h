@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define GCRYPT_NO_DEPRECATED
+#include <gcrypt.h>
+
 #define STATUS_ENC_KEY  1
 #define STATUS_DEC_KEY  0
 #define STATUS_ENC_FILE 42
@@ -21,6 +24,7 @@ typedef struct {
    int reseed;
    int keep_key;
    int cryptlib;
+   gcry_random_level_t random_quality;
 } config_t;
 
 #endif

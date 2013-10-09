@@ -5,8 +5,6 @@
 #include "generate.h"
 #include "header.h"
 
-#define GCRYPT_NO_DEPRECATED
-#include <gcrypt.h>
 
 /* Generate a keyfile [path] and a private keyfile [path].private
  * with the same 1042*[size] random bytes using openssl/rand.h, but
@@ -49,15 +47,14 @@ int generate ( config_t* config, size_t size, char * path) {
 
    } else if (config->cryptlib == USE_LIBGCRYPT) {
 
-      gcry_randomize((uint8_t*) &h.id, sizeof(uint64_t), GCRY_VERY_STRONG_RANDOM);
+      gcry_randomize((uint8_t*) &h.id, sizeof(uint64_t), GCRY_WEAK_RANDOM);
 
       /* Generate random numbers. We could also use gcry_random_bytes_secure which
        * uses protected memory for the key storage. Unfortunalely we only have
        * very limited secure memory and in the end we store the data on the hard
        * disk anyway.
-       * We could also use GCRY_VERY_STRONG_RANDOM to increase the security. That
-       * will, however, make the PRNG quite slow.*/
-      buf = gcry_random_bytes(size, GCRY_STRONG_RANDOM);
+       **/
+      buf = gcry_random_bytes(size, config->random_quality);
       if (!buf) {
          fprintf(stderr, "\nError generating random bytes\n");
          return 1;
