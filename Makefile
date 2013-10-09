@@ -1,5 +1,7 @@
+LIBS=-lcrypto `libgcrypt-config --cflags --libs`
+
 all: onetimepad.c crypt.o generate.o aes.o
-	gcc -Wall onetimepad.c crypt.o generate.o aes.o -o onetimepad -lcrypto
+	gcc -Wall onetimepad.c crypt.o generate.o aes.o -o onetimepad ${LIBS}
 
 install: all 
 	cp onetimepad.1 /usr/share/man/man1/
