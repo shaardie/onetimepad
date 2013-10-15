@@ -4,6 +4,12 @@ INSTALATION
 -----------
 
 To install Onetimepad, you will need: 
-- make 
-- An ANSI C compiler
-- Openssl development library
+- make
+- C compiler
+	(Tested with gcc 4.8.1)
+- Development files for Openssl
+	(For example in Fedora 19 this is the package "openssl-devel)
+- Development files for Libgcrypt
+	(For example in Fedora 19 this is the package "libgcrypt-devel)
+
+For installation, simply do "make install" as root.
