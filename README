@@ -13,3 +13,6 @@ To install Onetimepad, you will need:
 	(For example in Fedora 19 this is the package "libgcrypt-devel)
 
 For installation, simply do "make install" as root.
+
+USAGE
+-----
