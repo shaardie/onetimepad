@@ -4,7 +4,6 @@
 #include "crypt.h"
 #include "header.h"
 #include "generate.h"
-#include "keycrypt.h"
 #include <getopt.h>
 
 /* Main file.  Read in arguments an transfer them
