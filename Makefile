@@ -40,4 +40,4 @@ test: all
 	@diff inputfile plainfile.3 && echo "  decrypted file 3: ok" || echo "  decrypted file 3: error"
 	@diff inputfile plainfile.4 && echo "  decrypted file 4: ok" || echo "  decrypted file 4: error"
 	@echo cleanup…
-	@rm inputfile keyfile plainfile.* encfile.*
+	@rm inputfile keyfile keyfile.public plainfile.* encfile.*
