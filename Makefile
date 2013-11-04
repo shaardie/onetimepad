@@ -27,16 +27,16 @@ test: all
 	dd if=/dev/urandom of=inputfile count=10 bs=1M
 	./onetimepad -r generate 50000 keyfile
 	./onetimepad    import keyfile
-	./onetimepad    encrypt inputfile keyfile encfile.1
-	./onetimepad    encrypt inputfile keyfile encfile.2
-	./onetimepad    encrypt inputfile keyfile encfile.3
-	./onetimepad    encrypt inputfile keyfile encfile.4
-	./onetimepad -k decrypt encfile.1 keyfile.public plainfile.1.a
-	./onetimepad    decrypt encfile.1 keyfile.public plainfile.1.b
-	./onetimepad    decrypt encfile.1 keyfile.public plainfile.1.c
-	./onetimepad    decrypt encfile.3 keyfile.public plainfile.3
-	./onetimepad    decrypt encfile.2 keyfile.public plainfile.2
-	./onetimepad decrypt encfile.4 keyfile.public plainfile.4
+	./onetimepad    encrypt inputfile keyfile.public encfile.1
+	./onetimepad    encrypt inputfile keyfile.public encfile.2
+	./onetimepad    encrypt inputfile keyfile.public encfile.3
+	./onetimepad    encrypt inputfile keyfile.public encfile.4
+	./onetimepad -k decrypt encfile.1 keyfile plainfile.1.a
+	./onetimepad    decrypt encfile.1 keyfile plainfile.1.b
+	./onetimepad    decrypt encfile.1 keyfile plainfile.1.c
+	./onetimepad    decrypt encfile.3 keyfile plainfile.3
+	./onetimepad    decrypt encfile.2 keyfile plainfile.2
+	./onetimepad decrypt encfile.4 keyfile plainfile.4
 	@diff inputfile plainfile.1.a && echo "  decrypted file 1.a: ok" || echo "  decrypted file 1.a: error"
 	@diff inputfile plainfile.1.b && echo "  decrypted file 1.b: ok" || echo "  decrypted file 1.b: error"
 	@diff inputfile plainfile.1.c && echo "  decrypted file 1.c: error" || echo "  decrypted file 1.c: ok (should differ)"
