@@ -3,7 +3,7 @@
 #include "header.h"
 
 int import ( config_t* config, char * path) {
-	
+
 	/* Open keyfile path to read and write */
    FILE * f = fopen(path,"r+");
    

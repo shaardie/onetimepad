@@ -58,14 +58,7 @@ int main(int argc, char *argv[]) {
             config.random_quality = GCRY_VERY_STRONG_RANDOM;
             break;
          case 's':
-				switch (atoi(optarg)) {
-					case '1':
-						config.get_status = STATUS_DEC_KEY;
-						break;
-					case '2':
-						config.get_status = STATUS_ENC_KEY;
-						break;
-				}
+				config.get_status =  atoi(optarg);
             break;
       }
    }
