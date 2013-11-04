@@ -3,8 +3,6 @@ UNDER DEVELOPMENT
 
 TODO
 ----
-- Use random header in generate.c
-- create import function
 - add twofish to import function
 - write README
 - write manpagenetimepad is a cryptography tool
