@@ -4,6 +4,7 @@
 #include "crypt.h"
 #include "header.h"
 #include "generate.h"
+#include "import.h"
 #include <getopt.h>
 
 /* Main file.  Read in arguments an transfer them
@@ -13,6 +14,7 @@ void usage(const char* prgm) {
    printf( "\nUsage: %s [options] command [command options]\n\n"
          "-- Commands: ----\n"
          "\tgenerate        -- generate a new keyfile\n"
+			"\timport          -- import a keyfile\n"
          "\tencrypt         -- encrypt a file\n"
          "\tdecrypt         -- decrypt a file\n\n"
          "-- Options ----\n"
@@ -83,6 +85,15 @@ int main(int argc, char *argv[]) {
          return generate( &config, atol(argv[optind+1]), argv[optind+2]);
       }
       printf("Command options: generate [size (kb)] [keyfile]\n");
+      return 0;
+   }
+
+   /* Case: import */
+   if (!strcmp("import", cmd)) {
+      if (argc - optind == 2) {
+         return import( &config, argv[optind+1]);
+      }
+      printf("Command options: import [keyfile]\n");
       return 0;
    }
 

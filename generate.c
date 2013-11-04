@@ -15,10 +15,8 @@ int generate ( config_t* config, size_t size, char * path) {
    size *= 1024;
 
    header_t h;
-   h.status = STATUS_ENC_KEY;
-   h.pos       = 0;
-   h.size      = size;
-      uint8_t * buf;
+   h.size = size;
+   uint8_t * buf;
 
    if (config->cryptlib == USE_OPENSSL) {
       if (!RAND_bytes((uint8_t*) &h.id, sizeof(uint64_t))) {
@@ -81,40 +79,8 @@ int generate ( config_t* config, size_t size, char * path) {
       fclose(f);
       return 1;       
    }
+
    fclose(f);
-
-   h.status = STATUS_DEC_KEY;
-
-   char* pubpath = malloc(strlen(path) + 8 * sizeof(char));
-   sprintf(pubpath, "%s.public", path);
-
-   f = fopen(pubpath,"w");
-   
-   if (!f) {
-      fprintf(stderr, "Could not open keyfile %s", path);
-      free(buf);
-      free(pubpath);
-      fclose(f);
-      return 1;
-   }
-
-   if (fwrite(&h, 1, sizeof(header_t), f) != sizeof(header_t)) {
-      fprintf(stderr, "Could not write to keyfile %s", pubpath);
-      free(buf);
-      free(pubpath);
-      fclose(f);
-      return 1;
-   }
-   if (fwrite(buf, 1, size, f) != size ) {
-      fprintf(stderr, "Could not write to keyfile");
-      free(buf);
-      free(pubpath);
-      fclose(f);
-      return 1;       
-   }
-   fclose(f);
-   free(pubpath);
    free(buf);
-
    return 0;
 }

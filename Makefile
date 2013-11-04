@@ -1,7 +1,7 @@
 LIBS=-lcrypto `libgcrypt-config --cflags --libs`
 
-all: onetimepad.c crypt.o generate.o
-	gcc -Wall onetimepad.c crypt.o generate.o -o onetimepad ${LIBS}
+all: onetimepad.c crypt.o generate.o import.o
+	gcc -Wall onetimepad.c crypt.o generate.o import.o -o onetimepad ${LIBS}
 
 install: all 
 	cp onetimepad.1 /usr/share/man/man1/
@@ -13,8 +13,11 @@ crypt.o: crypt.c crypt.h
 generate.o: generate.c generate.h
 	gcc -Wall generate.c -c -o generate.o
 
+import.o: import.c import.h 
+	gcc -Wall import.c -c -o import.o
+
 clean:
-	rm -f onetimepad crypt.o generate.o aes.o
+	rm -f onetimepad crypt.o generate.o import.o
 
 uninstall:
 	rm -f /usr/share/man/man1/onetimepad.1 /usr/bin/onetimepad
@@ -23,6 +26,7 @@ uninstall:
 test: all
 	dd if=/dev/urandom of=inputfile count=10 bs=1M
 	./onetimepad -r generate 50000 keyfile
+	./onetimepad    import keyfile
 	./onetimepad    encrypt inputfile keyfile encfile.1
 	./onetimepad    encrypt inputfile keyfile encfile.2
 	./onetimepad    encrypt inputfile keyfile encfile.3
