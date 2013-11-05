@@ -44,4 +44,4 @@ test: all
 	@diff inputfile plainfile.3 && echo "  decrypted file 3: ok" || echo "  decrypted file 3: error"
 	@diff inputfile plainfile.4 && echo "  decrypted file 4: ok" || echo "  decrypted file 4: error"
 	@echo cleanup…
-	@rm -f inputfile keyfile keyfile.public plainfile.* encfile.* onetimepad crypt.o generate.o import.o
+	@rm  inputfile keyfile keyfile.public plainfile.* encfile.*
