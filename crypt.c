@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include "crypt.h"
 
+
 int encrypt(config_t* config, char * input, char * key, char * output) {
-   
+  
+	/* open file to encrypt */
    FILE * inputf = fopen (input,"r");
 
    if (!inputf) {

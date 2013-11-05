@@ -7,17 +7,16 @@
 #include "import.h"
 #include <getopt.h>
 
-/* Main file.  Read in arguments an transfer them
- * to encrypt, decrypt and generate */
-
+/* usage print a help */
 void usage(const char* prgm) {
    printf( "\nUsage: %s [options] command [command options]\n\n"
          "-- Commands: ----\n"
-         "\tgenerate        -- generate a new keyfile\n"
-			"\timport          -- import a keyfile\n"
-         "\tencrypt         -- encrypt a file\n"
-         "\tdecrypt         -- decrypt a file\n\n"
+         "\tgenerate        -- Generate a new keyfile\n"
+			"\timport          -- Import a keyfile\n"
+         "\tencrypt         -- Encrypt a file\n"
+         "\tdecrypt         -- Decrypt a file\n\n"
          "-- Options ----\n"
+			"\t-h              -- Show this help\n"
          "\t-r              -- Toggle reseed of OpenSSL PRNG (default: reseed)\n"
          "\t-k              -- Toggle if the key part used for decryption shall be\n"
          "\t                   kept to enable a second decryption. (default: overwrite)\n\n"
@@ -26,13 +25,16 @@ void usage(const char* prgm) {
          "\t-s importstatus -- Set status for import:\n"
 			"\t                   1 to import key as decrypt key\n"
 			"\t                   2 to import key as encrypt key\n"
-			"\t                   3 to import key as encrypt and decrypt key (default 3)\n"
+			"\t                   3 to import key as encrypt and decrypt key (default 3)\n\n"
+			"For more informations read the man page.\n\n"
          ,prgm);
 }
 
+/* Read in arguments an transfer them
+ * to encrypt, decrypt, generate and import */
 int main(int argc, char *argv[]) {
-   
-   /* Default values:
+   /* Set default values 
+    * Default values:
     * - Reseed
     * - Do not keep keys 
     * - use openssl 
@@ -40,9 +42,9 @@ int main(int argc, char *argv[]) {
 	 * - Set import status decrypt and encrypt */
    config_t config = { 1, 0, USE_OPENSSL, GCRY_STRONG_RANDOM, STATUS_ENCDEC_KEY };
 
-   /* Read in options for reseed and keeping key */
+   /* Read in options */
    int c;
-   while ((c = getopt (argc, argv, "rkl:qs:")) != -1) {
+   while ((c = getopt (argc, argv, "rkl:qs:h")) != -1) {
       switch (c) {
          case 'r': 
             config.reseed = !config.reseed;
@@ -60,17 +62,20 @@ int main(int argc, char *argv[]) {
          case 's':
 				config.get_status =  atoi(optarg);
             break;
+			case 'h':
+				usage(*argv);
+				return 0;
       }
    }
 
-   /* Looking for parameters and show otherwise 
-    * standard commands */
+   /* Show help if there is no command  */
    if (argc - optind < 1) {
       usage(*argv);
       return 0;
    }
 
-   const char* cmd = argv[optind];
+	/* Go through the commands */
+	const char* cmd = argv[optind];
    
    /* Case: generate */
    if (!strcmp("generate", cmd)) {
