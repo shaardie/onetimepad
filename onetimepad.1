@@ -1,15 +1,74 @@
-.TH "Onetimepad" "1" "27.09.2013" "Version 0.1" "Onetimepad"
+.TH "Onetimepad" "1" "Version 0.1" "Sven Haardiek, Lars Kiesow" "Cryptographic
+tool"
 .SH "NAME"
-onetimepad \- Onetimepad command line tool
+onetimepad - cryptographic toolkit for the command line
+
 .SH "SYNOPSIS"
-onetimepad \fIcommand\fR [ \fIcommand_args\fR ]
+\fBonetimepad\fI [ \fI\-options\fR ] \fIcommand\fR [ \fIcommand_args\fR ]
+
 .SH "DESCRIPTION"
-Onetimepad is a cryptography toolkit.
+\fBOnetimepad\fI encrypts and decrypts files by linking them XOR with a key
+files and should be used for secure data exchange with other people, because
+after exchange of the key file the encrypted communication should be save.
 
-The onetimepad program is a command line tool for generate keyfiles with random characters using the openssl libary and encrypt and decrypt files using a keyfile and XOR operations. 
-.SH "STANDART COMMANDS"
+The keyfiles consist of random characters generated with the \fBOpenssl
+libary\fR (default) or the \fBGcrypt library\fR.
+
+Before key files can be used they have to be imported by the program as a key
+file for encryption, decryption or both. Key files for encryption get the
+postfix .public. If the keyfile is imported to encrypt and decrypt,
+\fBonetimepad\fR will generate two files, because the used parts of the key
+files will be override by zeros but needed again for decryption (usually
+encryption and decryption are not running on the same pc).
+
+After importing a key file it will be encrypted with the twofish algorithm from
+the \fBGcrypt library\fR with a 256bit key derivated from a passphrase. 
+
+.SH "COMMANDS"
 .SS "\fBgenerate\fR" [ \fIsize\fR ] [ \fIkeyfile\fR ]
-generate a keyfile of random characters with the size \fIsize\fR in kilobyte and the name \fIkeyfile\fR.
-.SS "\fBcrypt\fR" [ \fIinputfile\fR ] [ \fIkeyfile\fR ] [ \fIposition\fR ] [ \fIoutputfile\fR ]
-encrypt or decrypt the inputfile with the name \fIinputfile\fR using the characters in the keyfile \fIkeyfile\fR starting at the position \fIposition\fR and putting the result in the outputfile with the name \fIoutputfile\fR.
+Generate a key file of random characters with the size \fIsize\fR in kilobyte
+and the name \fIkeyfile\fR. On default the \fBOpenssl library\fR is used to
+generate random bytes.
 
+.SS "\fBimport\fR [ \fIkeyfile\fR ]
+Import the key file \fIkeyfile\fR. The key file will be encrypted with twofish.
+By default the key file will be imported for encrpytion and
+decryption and therefor a new file \fIkeyfile.public\fR for encryption will be
+created.  
+
+.SS "\fBencrypt\fR" [ \fIinputfile\fR ] [ \fIkeyfile\fR ]  [\fIoutputfile\fR ]
+Encrypt the input file with the name \fIinputfile\fR using the key file
+\fIkeyfile\fR and saving the result in the output file with the name
+\fIoutputfile\fR. The keyfile must be imported for encryption (they get the
+postfix .public).
+
+.SS "\fBdecrypt\fR" [ \fIinputfile\fR ] [ \fIkeyfile\fR ]  [\fIoutputfile\fR ]
+Decrypt the input file with the name \fIinputfile\fR using the key file
+\fIkeyfile\fR and saving the result in the output file with the name
+\fIoutputfile\fR. The keyfile must be imported for decryption.
+
+.SH "OPTIONS"
+.IP "\fB\-h\fR"
+Show a little help for usage
+
+.IP "\fB\-r\fR"
+Toggle reseed of OpenSSL PRNG (default: reseed)
+
+.IP "\fB\-k\fR"
+Toggle if the key part used for decryption shall be kept to
+enable a second decryption. (default: overwrite)
+
+.IP "\fB\-l\fR"
+Change library to use for random number generation to \fBGcrypt library\fI
+
+.IP "\fB\-q\fR"
+Use very strong pseudo random number generator
+
+.IP "\fB\-s\fR [ \fIimportstatus\fR ]"
+Set Status for import. \fI1\fR to import key as decryption key, \fI2\fR to import
+key as encryption key and \fI3\fR to import key as encryption and decryption key
+(default: 3)
+
+.SH "RETURN VALUE"
+Upon successful completion \fBonetimepad\fR return \fI0\fR. Otherwise is
+returned \fI1\fR.
