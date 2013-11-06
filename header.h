@@ -19,18 +19,18 @@
 
 /* define struct header */
 typedef struct {
-   uint8_t status;
-   uint64_t pos;
-   uint16_t id;
-   uint64_t size;
+	uint8_t status;
+	uint64_t pos;
+	uint16_t id;
+	uint64_t size;
 } header_t;
 
 /* define struct config */
 typedef struct {
-   int reseed;
-   int keep_key;
-   int cryptlib;
-   gcry_random_level_t random_quality;
+	int reseed;
+	int keep_key;
+	int cryptlib;
+	gcry_random_level_t random_quality;
 	int get_status; 
 } config_t;
 

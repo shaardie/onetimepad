@@ -6,23 +6,23 @@
 int import ( config_t* config, char * path) {
 
 	/* Open keyfile path to read and write */
-   FILE * f = fopen(path,"r+");
-   
-   if (!f) {
-      fprintf(stderr, "Could not open keyfile %s", path);
-      return 1;
-   }
+	FILE * f = fopen(path,"r+");
+
+	if (!f) {
+		fprintf(stderr, "Could not open keyfile %s", path);
+		return 1;
+	}
 
 	/* Create new header */
-   header_t keyheader;
-   
+	header_t keyheader;
+
 	/* Read header from keyfile */
 	if (fread(&keyheader,1,sizeof(header_t),f) 
 			!= sizeof(header_t) ) {
-      fprintf(stderr, "Could not read from keyfile %s\n", path);
-      fclose(f);
-      return 1;
-   }
+		fprintf(stderr, "Could not read from keyfile %s\n", path);
+		fclose(f);
+		return 1;
+	}
 
 	/* Set pos of the new header */
 	keyheader.pos = 0;
@@ -44,9 +44,9 @@ int import ( config_t* config, char * path) {
 		fclose(f);
 
 		/* rename to .public */
-   	char * pubpath = malloc(strlen(path)
+		char * pubpath = malloc(strlen(path)
 				+ 8 * sizeof(char));
-   	sprintf(pubpath, "%s.public", path);
+		sprintf(pubpath, "%s.public", path);
 		rename(path,pubpath); /* error is missing */
 		
 		/* free all and return success */
@@ -72,7 +72,7 @@ int import ( config_t* config, char * path) {
 			free(pubpath);
 			fclose(f);
 			return 1;
-   	}
+		}
 
 		/* write new header to public keyfile */
 		if (fwrite(&keyheader, 1, sizeof(header_t), fpublic)
@@ -80,10 +80,10 @@ int import ( config_t* config, char * path) {
 			fprintf(stderr,
 					"Could not write to public keyfile %s", pubpath);
 			free(pubpath);
-      	fclose(f);
+			fclose(f);
 			fclose(fpublic);
 			return 1;
-   	}
+		}
 		
 		/* allocate memory for buffer */
 		uint8_t * buf;
@@ -91,7 +91,7 @@ int import ( config_t* config, char * path) {
 		if (!buf) {
 			fprintf(stderr, "\nCould not allocate memory\n");
 			free(pubpath);
-      	fclose(f);
+			fclose(f);
 			fclose(fpublic);
 			return 1;
 		}
@@ -113,19 +113,19 @@ int import ( config_t* config, char * path) {
 		/* write key to public keyfile  */
 		if (fwrite(buf, 1, keyheader.size, fpublic)
 				!= keyheader.size ) {
-      	fprintf(stderr, "Could not write to public keyfile %s\n",
+			fprintf(stderr, "Could not write to public keyfile %s\n",
 					pubpath);
-      	free(buf);
-      	free(pubpath);
-      	fclose(f);
+			free(buf);
+			free(pubpath);
+			fclose(f);
 			fclose(fpublic);
-      	return 1;       
-   	}
-   	
+			return 1;       
+		}
+		
 		/* close public keyfile and free all */
 		fclose(fpublic);
-   	free(pubpath);
-   	free(buf);
+		free(pubpath);
+		free(buf);
 	}
 
 	/* keyfile for decryption */
