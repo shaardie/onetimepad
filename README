@@ -4,12 +4,9 @@ UNDER DEVELOPMENT
 TODO
 ----
 - add twofish to import function
-- write README
-- write manpagenetimepad is a cryptography tool
 
 INSTALATION
 -----------
-
 To install Onetimepad, you will need: 
 - make
 - C compiler
@@ -19,7 +16,31 @@ To install Onetimepad, you will need:
 - Development files for Libgcrypt
 	(For example in Fedora 19 this is the package "libgcrypt-devel)
 
-For installation, simply do "make install" as root.
+Execute "make install" in the directory to install.
+This compile the program and copy the executable file onetimepad to "/usr/bin/" and
+the man page file onetimepad.1 to "/usr/share/man/man1/". Perhaps you need to
+be root to do this.  
 
-USAGE
------
+COMPILATION
+-----------
+Execute "make all" in the directory to compile.
+
+TEST
+----
+Execute "make test" in directory to test onetimepad on your pc.
+Look at the output to proof, if it is working correct.
+
+CLEANUP
+-------
+Execute "make clean" in directory to clean up the directory.
+This delete all files created by the compiling.
+
+UNINSTALLATION
+--------------
+Execute "make uninstall" in directory to uninstall onetimepad. This delete
+the files "/usr/bin/onetimepad" and "/usr/share/man/man1/onetimepad.1". Perhaps
+you need to be root to do this.
+
+MORE INFORMATIONS
+-----------------
+For more informations look at the manpage "onetimepad.1".
