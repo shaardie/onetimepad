@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "header.h"
 
+/* function to import keyfile to encrypt, to decrypt or both */
 int import ( config_t* config, char * path) {
 
 	/* Open keyfile path to read and write */
@@ -38,6 +39,8 @@ int import ( config_t* config, char * path) {
 			fclose(f);
 			return 1;
 		}
+
+		/* close keyfile */
 		fclose(f);
 
 		/* rename to .public */
@@ -45,16 +48,19 @@ int import ( config_t* config, char * path) {
 				+ 8 * sizeof(char));
    	sprintf(pubpath, "%s.public", path);
 		rename(path,pubpath); /* error is missing */
-
+		
+		/* free all and return success */
 		free(pubpath);
 		return 0;
 	}
 
-	/* If keyfile is for decryption and encryption */
+	/* If keyfile is for decryption and encryption 
+	 * create new keyfile path.public for encryption
+	 **/
 	if (config->get_status == STATUS_ENCDEC_KEY) {
 		keyheader.status = STATUS_ENC_KEY;
 
-		/*create new file .public for encryption*/
+		/* open new file path.public for encryption */
 		char * pubpath = malloc(strlen(path)
 				+ 8 * sizeof(char));
 		sprintf(pubpath, "%s.public", path);
@@ -115,7 +121,8 @@ int import ( config_t* config, char * path) {
 			fclose(fpublic);
       	return 1;       
    	}
-   		
+   	
+		/* close public keyfile and free all */
 		fclose(fpublic);
    	free(pubpath);
    	free(buf);
@@ -132,6 +139,8 @@ int import ( config_t* config, char * path) {
 		fclose(f);
 		return 1;
 	}
+
+	/*close all and return success */
 	fclose(f);
 	return 0;
 	

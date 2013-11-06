@@ -6,15 +6,18 @@
 #define GCRYPT_NO_DEPRECATED
 #include <gcrypt.h>
 
+/* define variables for key status */
 #define STATUS_UNUSED_KEY 0
 #define STATUS_DEC_KEY    1
 #define STATUS_ENC_KEY    2
 #define STATUS_ENCDEC_KEY 3
 #define STATUS_ENC_FILE   4
 
+/* define variables for crypt libraries */
 #define USE_OPENSSL   0
 #define USE_LIBGCRYPT 1
 
+/* define struct header */
 typedef struct {
    uint8_t status;
    uint64_t pos;
@@ -22,6 +25,7 @@ typedef struct {
    uint64_t size;
 } header_t;
 
+/* define struct config */
 typedef struct {
    int reseed;
    int keep_key;

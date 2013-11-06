@@ -3,7 +3,6 @@ UNDER DEVELOPMENT
 
 TODO
 ----
-- write comments to import.c crypt.c 
 - add twofish to import function
 - write README
 - write manpagenetimepad is a cryptography tool
