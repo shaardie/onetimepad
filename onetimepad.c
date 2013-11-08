@@ -6,6 +6,7 @@
 #include "generate.h"
 #include "import.h"
 #include <getopt.h>
+#include "twofish.h"
 
 /* usage print a help */
 void usage(const char* prgm) {
@@ -25,7 +26,6 @@ void usage(const char* prgm) {
 			"\t-s importstatus -- Set status for import:\n"
 			"\t                   1 to import key as decrypt key\n"
 			"\t                   2 to import key as encrypt key\n"
-			"\t                   3 to import key as encrypt and decrypt key (default 3)\n\n"
 			"For more informations read the man page.\n\n"
 			,prgm);
 }
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 	 * - use openssl 
 	 * - use gcrypt random quality strong
 	 * - Set import status decrypt and encrypt */
-	config_t config = { 1, 0, USE_OPENSSL, GCRY_STRONG_RANDOM, STATUS_ENCDEC_KEY };
+	config_t config = { 1, 0, USE_OPENSSL, GCRY_STRONG_RANDOM, STATUS_UNUSED_KEY };
 
 	/* Read in options */
 	int c;

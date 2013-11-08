@@ -10,8 +10,7 @@
 #define STATUS_UNUSED_KEY 0
 #define STATUS_DEC_KEY    1
 #define STATUS_ENC_KEY    2
-#define STATUS_ENCDEC_KEY 3
-#define STATUS_ENC_FILE   4
+#define STATUS_ENC_FILE   3
 
 /* define variables for crypt libraries */
 #define USE_OPENSSL   0
