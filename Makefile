@@ -3,6 +3,9 @@ LIBS=-lcrypto `libgcrypt-config --cflags --libs`
 all: onetimepad.c crypt.o generate.o import.o twofish.o
 	gcc -Wall onetimepad.c crypt.o generate.o import.o twofish.o -o onetimepad ${LIBS}
 
+kd: kd.c
+	gcc -o kd kd.c -lgcrypt
+
 install: all 
 	cp onetimepad.1 /usr/share/man/man1/
 	cp onetimepad /usr/bin/
