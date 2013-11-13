@@ -29,11 +29,11 @@ int import ( config_t* config, char * path) {
 		fclose(f);
 		return 1;
 	}
-
+	
 	/* Set pos and status of the new header */
 	keyheader.pos    = 0;
 	keyheader.status = config->get_status; 
-
+	
 	/* write new header to file */
 	fseek(f,0,SEEK_SET);
 	if (fwrite(&keyheader, 1, sizeof(header_t), f)
@@ -53,6 +53,7 @@ int import ( config_t* config, char * path) {
 	}
 	
 	/* read random bytes */
+	fseek(f,sizeof(header_t),SEEK_SET);
 	if (fread( buf, 1, keyheader.size, f) 
 			!= keyheader.size ) {
 		fprintf(stderr, "Could not read from keyfile %s\n",

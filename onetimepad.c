@@ -15,7 +15,8 @@ void usage(const char* prgm) {
 			"\tgenerate        -- Generate a new keyfile\n"
 			"\timport          -- Import a keyfile\n"
 			"\tencrypt         -- Encrypt a file\n"
-			"\tdecrypt         -- Decrypt a file\n\n"
+			"\tdecrypt         -- Decrypt a file\n"
+			"\tkeyinfo         -- Get information to a keyfile\n\n"
 			"-- Options ----\n"
 			"\t-h              -- Show this help\n"
 			"\t-r              -- Toggle reseed of OpenSSL PRNG (default: reseed)\n"
@@ -83,6 +84,41 @@ int main(int argc, char *argv[]) {
 			return generate( &config, atol(argv[optind+1]), argv[optind+2]);
 		}
 		printf("Command options: generate [size (kb)] [keyfile]\n");
+		return 0;
+	}
+
+	/* Case: keyinfo */
+	if (!strcmp("keyinfo", cmd)) {
+		if (argc - optind == 2) {
+			
+			/* open keyfile */
+			FILE * f = fopen(argv[optind+1],"r");
+			if (!f) {
+				fprintf(stderr, "Could not open keyfile %s", argv[optind+1]);
+				return 1;
+			}
+			
+			/* Create new header */
+			header_t keyheader;
+
+			/* Read header from keyfile */
+			if (fread(&keyheader,1,sizeof(header_t),f) 
+					!= sizeof(header_t) ) {
+				fprintf(stderr, "Could not read from keyfile %s\n", argv[optind+1]);
+				fclose(f);
+				return 1;
+			}
+
+			printf("Key Status: %i\n", keyheader.status);
+			printf("Key Position: %lu\n", keyheader.pos);
+			printf("Key Id: %i\n", keyheader.id);
+			printf("Key Size: %lu\n", keyheader.size);
+		
+			fclose(f);
+			return 0;
+
+		}
+		printf("Command options: keyinfo [keyfile]\n");
 		return 0;
 	}
 
