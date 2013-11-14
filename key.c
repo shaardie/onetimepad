@@ -17,7 +17,7 @@ char * getpasswd( char * passwd, char * msg ) {
 
 	if (msg)
 		printf( msg );
-	scanf( "%s", passwd );
+	scanf( "%1023s", passwd );
 
 	/*  reset terminal settings */
 	tcsetattr( STDIN_FILENO, TCSANOW, &old_opts );
@@ -29,22 +29,17 @@ char * getpasswd( char * passwd, char * msg ) {
 
 }
 
-int main( int argc, char** argv ) {
+unsigned char * getkey(unsigned char * key, void * salt, char * msg) {
 
 	char passphrase[1024];
-	void* salt          = gcry_random_bytes( 8, GCRY_STRONG_RANDOM );
-	unsigned char key[33];
-	key[32] = 0;
+	salt = gcry_random_bytes( 8, GCRY_STRONG_RANDOM );
+	key  = (unsigned char *) malloc(32 * sizeof(unsigned char));
 
-	getpasswd( passphrase, "Enter password: " );
+	getpasswd( passphrase, msg );
 
 	gcry_kdf_derive( passphrase, strlen(passphrase), GCRY_KDF_ITERSALTED_S2K,
 			GCRY_MD_SHA512, salt, 8, 10, 32, key );
 
-	size_t i;
-	for (i = 0; i < 32; i++) {
-		printf("%02x", key[i]);
-	}
-	printf("\n");
+	return key;
 
 }

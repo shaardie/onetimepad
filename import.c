@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "header.h"
 #include "twofish.h"
+#include "key.h"
 
 /* function to import keyfile to encrypt, to decrypt or both */
 int import ( config_t* config, char * path) {
@@ -63,12 +64,38 @@ int import ( config_t* config, char * path) {
 		return 1;
 	}
 
-	/* placeholder */
-	char * key      = "keyfile keyfile keyfile keyfile ";
+	/* key deriation */
+   unsigned char * key;
+	void * salt;
+	getkey(key,salt,"Please enter decryption passphrase: ");
+
+	/* read key in crypt context */
+	if (twofish_decrypt((char *)buf,keyheader.size,(char *)key)) {
+		fprintf(stderr, "Could not decrypt keyfile %s\n",
+				path);
+		free(buf);
+		fclose(f);
+		return 1;       
+	}
+	
+
+
 
 	/* decryption */
-	if (twofish_decrypt((char *)buf,keyheader.size,key)) {
+	if (twofish_decrypt((char *)buf,keyheader.size,(char *)key)) {
 		fprintf(stderr, "Could not decrypt keyfile %s\n",
+				path);
+		free(buf);
+		fclose(f);
+		return 1;       
+	}
+	
+	/* placeholder */
+	char * key2      = "abcdefg abcdefg abcdefg abcdefg ";
+
+	/* decryption */
+	if (twofish_encrypt((char *)buf,keyheader.size,key2)) {
+		fprintf(stderr, "Could not encrypt keyfile %s\n",
 				path);
 		free(buf);
 		fclose(f);
