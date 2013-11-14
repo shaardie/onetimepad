@@ -25,8 +25,6 @@ void usage(const char* prgm) {
 			"\t                   kept to enable a second decryption. (default: overwrite)\n\n"
 			"\t-l              -- Change Library to use for encryption and random number generation to Gcrypt library\n"
 			"\t-q              -- Use very strong pseudo random number generator\n"
-			"\t                   1 to import key as decrypt key\n"
-			"\t                   2 to import key as encrypt key\n"
 			"For more informations read the man page.\n\n"
 			,prgm);
 }

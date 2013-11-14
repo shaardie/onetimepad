@@ -1,5 +1,11 @@
-UNDER DEVELOPMENT
------------------
+CAUTION!
+--------
+This program works, but it is not save yet. There are several problems to fix. But be free to do this yourself.
+
+PROBLEMS
+--------
+- None secure memory is used
+- Every decryption and encryption the whole keyfile is decrypted instead of only the part that is used.
 
 INSTALATION
 -----------

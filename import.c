@@ -7,6 +7,7 @@
 /* function to import keyfile to encrypt, to decrypt or both */
 int import ( config_t* config, char * path) {
 
+	/* check if status is set */
 	if (!(config->get_status == STATUS_ENC_KEY 
 				|| config->get_status == STATUS_DEC_KEY )) {
 		fprintf(stderr, "Not a valid key status.\n");

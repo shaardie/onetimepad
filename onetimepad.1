@@ -18,8 +18,11 @@ After importing a key file it will be encrypted with the twofish algorithm from 
 .SS "\fBgenerate\fR" [ \fIsize\fR ] [ \fIkeyfile\fR ]
 Generate a key file of random characters with the size \fIsize\fR in kilobyte and the name \fIkeyfile\fR. On default the \fBOpenssl library\fR is used to generate random bytes.
 
-.SS "\fBimport\fR [ \fIkeyfile\fR ]
-Import the key file \fIkeyfile\fR. The key file will be encrypted with twofish. By default the key file will be imported for encrpytion and decryption and therefor a new file \fIkeyfile.public\fR for encryption will be created.
+.SS "\fBimport-enc\fR [ \fIkeyfile\fR ]
+Import the key file \fIkeyfile\fR to use for encrytion. Therefore the file is renamed as \fIkeyfile.public\fR. The key file will be encrypted with twofish. 
+
+.SS "\fBimport-dec\fR [ \fIkeyfile\fR ]
+Import the key file \fIkeyfile\fR to use for decrytion. The key file will be encrypted with twofish. 
 
 .SS "\fBencrypt\fR" [ \fIinputfile\fR ] [ \fIkeyfile\fR ]  [\fIoutputfile\fR ]
 Encrypt the input file with the name \fIinputfile\fR using the key file \fIkeyfile\fR and saving the result in the output file with the name \fIoutputfile\fR. The keyfile must be imported for encryption (they get the postfix .public).
@@ -45,9 +48,6 @@ Change library to use for random number generation to \fBGcrypt library\fI.
 
 .IP "\fB\-q\fR"
 Use very strong pseudo random number generator.
-
-.IP "\fB\-s\fR [ \fIimportstatus\fR ]"
-Set Status for import. \fI1\fR to import key as decryption key, \fI2\fR to import key as encryption key and \fI3\fR to import key as encryption and decryption key (default: 3).
 
 .SH "RETURN VALUE"
 Upon successful completion \fBonetimepad\fR return \fI0\fR. Otherwise is returned \fI1\fR.
