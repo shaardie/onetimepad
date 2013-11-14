@@ -31,10 +31,16 @@ int import ( config_t* config, char * path) {
 		return 1;
 	}
 	
+	/* key deriation */
+   char * key;
+	void * salt = NULL;
+	getkey(&key,&salt,"Please enter encryption passphrase: ");
+	
 	/* Set pos and status of the new header */
 	keyheader.pos    = 0;
 	keyheader.status = config->get_status; 
-	
+	keyheader.salt   = *((uint64_t * ) salt);
+
 	/* write new header to file */
 	fseek(f,0,SEEK_SET);
 	if (fwrite(&keyheader, 1, sizeof(header_t), f)
@@ -64,37 +70,8 @@ int import ( config_t* config, char * path) {
 		return 1;
 	}
 
-	/* key deriation */
-   unsigned char * key;
-	void * salt;
-	getkey(key,salt,"Please enter decryption passphrase: ");
-
-	/* read key in crypt context */
-	if (twofish_decrypt((char *)buf,keyheader.size,(char *)key)) {
-		fprintf(stderr, "Could not decrypt keyfile %s\n",
-				path);
-		free(buf);
-		fclose(f);
-		return 1;       
-	}
-	
-
-
-
-	/* decryption */
-	if (twofish_decrypt((char *)buf,keyheader.size,(char *)key)) {
-		fprintf(stderr, "Could not decrypt keyfile %s\n",
-				path);
-		free(buf);
-		fclose(f);
-		return 1;       
-	}
-	
-	/* placeholder */
-	char * key2      = "abcdefg abcdefg abcdefg abcdefg ";
-
-	/* decryption */
-	if (twofish_encrypt((char *)buf,keyheader.size,key2)) {
+	/* encryption */
+	if (twofish_encrypt((char *)buf,keyheader.size,key)) {
 		fprintf(stderr, "Could not encrypt keyfile %s\n",
 				path);
 		free(buf);
@@ -102,7 +79,7 @@ int import ( config_t* config, char * path) {
 		return 1;       
 	}
 
-	/* write decrypted random bytes to keyfile  */
+	/* write encrypted random bytes to keyfile  */
 	fseek(f,sizeof(header_t),SEEK_SET);
 	if (fwrite(buf, 1, keyheader.size, f)
 			!= keyheader.size ) {

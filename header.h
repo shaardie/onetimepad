@@ -22,6 +22,7 @@ typedef struct {
 	uint64_t pos;
 	uint16_t id;
 	uint64_t size;
+	uint64_t salt;
 } header_t;
 
 /* define struct config */

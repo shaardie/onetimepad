@@ -29,17 +29,21 @@ char * getpasswd( char * passwd, char * msg ) {
 
 }
 
-unsigned char * getkey(unsigned char * key, void * salt, char * msg) {
+char * getkey(char ** key, void ** salt, char * msg) {
 
 	char passphrase[1024];
-	salt = gcry_random_bytes( 8, GCRY_STRONG_RANDOM );
-	key  = (unsigned char *) malloc(32 * sizeof(unsigned char));
+	if (!*salt) {
+		printf("Generating salt\n");
+		salt = gcry_random_bytes( 8, GCRY_STRONG_RANDOM );
+	}
+	
+	*key  = (char *) malloc(32 * sizeof(char));
 
 	getpasswd( passphrase, msg );
 
 	gcry_kdf_derive( passphrase, strlen(passphrase), GCRY_KDF_ITERSALTED_S2K,
-			GCRY_MD_SHA512, salt, 8, 10, 32, key );
+			GCRY_MD_SHA512, salt, 8, 10, 32, *key );
 
-	return key;
+	return *key;
 
 }

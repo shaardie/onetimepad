@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "crypt.h"
+#include "key.h"
+#include "twofish.h"
 
 /* function to encrypt file */
 int encrypt(config_t* config, char * input, char * key, char * output) {
@@ -67,18 +69,34 @@ int encrypt(config_t* config, char * input, char * key, char * output) {
 		return 1;
 	}
 
-	/* read part of keyfile which is needed to encrypt */
-	char * buf_key = malloc (size_input);
-	fseek(keyf, keyheader.pos, SEEK_CUR);
-	if (fread(buf_key,1,size_input,keyf) != size_input) {
+	/* read keyfile */
+	char * buf_key = malloc (keyheader.size);
+	fseek(keyf, sizeof(header_t), SEEK_CUR);
+	if (fread(buf_key,1,keyheader.size,keyf) != keyheader.size) {
 		fprintf(stderr, "Could not read key file\n");
 		return 1;
+	}
+
+	/* key deriation */
+   char * twokey;
+	void * salt = (void*) &keyheader.salt;
+	getkey(&twokey,&salt,"Please enter passphrase to decrypt keyfile: ");
+
+	/* decryption */
+	if (twofish_decrypt((char *)buf_key,keyheader.size,twokey)) {
+		fprintf(stderr, "Could not decrypt keyfile %s\n",
+				key);
+		free(buf_key);
+		free(buf_put);
+		fclose(keyf);
+		fclose(inputf);
+		return 1;       
 	}
 
 	/* XOR key and input */
 	int i;
 	for (i = 0; i < size_input; i++) {
-		buf_put[i] = buf_put[i]^ buf_key[i];
+		buf_put[i] = buf_put[i]^ buf_key[i+keyheader.pos];
 	}
 
 	/* write encrypted input to output file */
@@ -105,16 +123,7 @@ int encrypt(config_t* config, char * input, char * key, char * output) {
 		return 1;
 	}
 
-	/* override used keyfile with zeros */
-	fseek(keyf,keyheader.pos - size_input + sizeof(header_t),0);
-	uint8_t * buf = calloc( sizeof(uint8_t), size_input );
-	if (fwrite(buf, 1, size_input, keyf) != size_input ) {
-		fprintf(stderr, "Could not write to keyfile %s\n", key);
-		return 1;       
-	}
-
 	/* close all, free all and return success */
-	free(buf);
 	fclose(keyf);
 	return 0;
 }
@@ -175,18 +184,34 @@ int decrypt(config_t* config, char * input, char * key, char * output) {
 		return 1;
 	}
 
-	/* read part of keyfile used for encryption */
-	char * buf_key = malloc (inputheader.size);
-	fseek(keyf,inputheader.pos,SEEK_CUR);
-	if (fread(buf_key,1,inputheader.size,keyf) != inputheader.size) {
+	/* read keyfile */
+	char * buf_key = malloc (keyheader.size);
+	fseek(keyf, sizeof(header_t), SEEK_CUR);
+	if (fread(buf_key,1,keyheader.size,keyf) != keyheader.size) {
 		fprintf(stderr, "Could not read key file\n");
 		return 1;
+	}
+
+	/* key deriation */
+   char * twokey;
+	void * salt = (void*) &keyheader.salt;
+	getkey(&twokey,&salt,"Please enter passphrase to decrypt keyfile: ");
+
+	/* decryption */
+	if (twofish_decrypt((char *)buf_key,keyheader.size,twokey)) {
+		fprintf(stderr, "Could not decrypt keyfile %s\n",
+				key);
+		free(buf_key);
+		free(buf_put);
+		fclose(keyf);
+		fclose(inputf);
+		return 1;       
 	}
 
 	/*XOR key and input */
 	int i;
 	for (i = 0; i < inputheader.size; i++) {
-		buf_put[i] = buf_put[i]^ buf_key[i];
+		buf_put[i] = buf_put[i]^ buf_key[i+keyheader.pos];
 	}
 
 	/* write decrypted input to output file */
@@ -202,19 +227,6 @@ int decrypt(config_t* config, char * input, char * key, char * output) {
 	/* close input and output file */
 	fclose(inputf);
 	fclose(outputf);
-
-	/* Update header of keyfile */
-	fseek(keyf,inputheader.pos + sizeof(header_t),SEEK_SET);
-
-	/* override used keyfile with zeros if not should be kept */
-	if (!config->keep_key) {
-		uint8_t * buf = calloc( sizeof(uint8_t), inputheader.size );
-		if (fwrite(buf, 1, inputheader.size, keyf) != inputheader.size ) {
-			fprintf(stderr, "Could not write to keyfile %s\n", key);
-			return 1;       
-		}
-		free(buf);
-	}
 
 	/* close all and return success */
 	fclose(keyf);
