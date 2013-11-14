@@ -71,7 +71,7 @@ int encrypt(config_t* config, char * input, char * key, char * output) {
 
 	/* read keyfile */
 	char * buf_key = malloc (keyheader.size);
-	fseek(keyf, sizeof(header_t), SEEK_CUR);
+	fseek(keyf, sizeof(header_t), SEEK_SET);
 	if (fread(buf_key,1,keyheader.size,keyf) != keyheader.size) {
 		fprintf(stderr, "Could not read key file\n");
 		return 1;
@@ -186,7 +186,7 @@ int decrypt(config_t* config, char * input, char * key, char * output) {
 
 	/* read keyfile */
 	char * buf_key = malloc (keyheader.size);
-	fseek(keyf, sizeof(header_t), SEEK_CUR);
+	fseek(keyf, sizeof(header_t), SEEK_SET);
 	if (fread(buf_key,1,keyheader.size,keyf) != keyheader.size) {
 		fprintf(stderr, "Could not read key file\n");
 		return 1;
