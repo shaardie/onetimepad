@@ -211,7 +211,7 @@ int decrypt(config_t* config, char * input, char * key, char * output) {
 	/*XOR key and input */
 	int i;
 	for (i = 0; i < inputheader.size; i++) {
-		buf_put[i] = buf_put[i]^ buf_key[i+keyheader.pos];
+		buf_put[i] = buf_put[i]^ buf_key[i+inputheader.pos];
 	}
 
 	/* write decrypted input to output file */
