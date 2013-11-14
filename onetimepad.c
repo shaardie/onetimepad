@@ -13,7 +13,8 @@ void usage(const char* prgm) {
 	printf( "\nUsage: %s [options] command [command options]\n\n"
 			"-- Commands: ----\n"
 			"\tgenerate        -- Generate a new keyfile\n"
-			"\timport          -- Import a keyfile\n"
+			"\timport-enc      -- Import a keyfile for encryption\n"
+			"\timport-dec      -- Import a keyfile for decryption\n"
 			"\tencrypt         -- Encrypt a file\n"
 			"\tdecrypt         -- Decrypt a file\n"
 			"\tkeyinfo         -- Get information to a keyfile\n\n"
@@ -24,7 +25,6 @@ void usage(const char* prgm) {
 			"\t                   kept to enable a second decryption. (default: overwrite)\n\n"
 			"\t-l              -- Change Library to use for encryption and random number generation to Gcrypt library\n"
 			"\t-q              -- Use very strong pseudo random number generator\n"
-			"\t-s importstatus -- Set status for import:\n"
 			"\t                   1 to import key as decrypt key\n"
 			"\t                   2 to import key as encrypt key\n"
 			"For more informations read the man page.\n\n"
@@ -59,9 +59,6 @@ int main(int argc, char *argv[]) {
 				break;
 			case 'q':
 				config.random_quality = GCRY_VERY_STRONG_RANDOM;
-				break;
-			case 's':
-				config.get_status =  atoi(optarg);
 				break;
 			case 'h':
 				usage(*argv);
@@ -122,12 +119,23 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
-	/* Case: import */
-	if (!strcmp("import", cmd)) {
+	/* Case: import key for encoding */
+	if (!strcmp("import-enc", cmd)) {
 		if (argc - optind == 2) {
+			config.get_status = STATUS_ENC_KEY;
 			return import( &config, argv[optind+1]);
 		}
-		printf("Command options: import [keyfile]\n");
+		printf("Command options: %s [keyfile]\n", cmd);
+		return 0;
+	}
+
+	/* Case: import key for decoding */
+	if (!strcmp("import-dec", cmd)) {
+		if (argc - optind == 2) {
+			config.get_status = STATUS_DEC_KEY;
+			return import( &config, argv[optind+1]);
+		}
+		printf("Command options: %s [keyfile]\n", cmd);
 		return 0;
 	}
 
